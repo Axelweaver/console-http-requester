@@ -41,7 +41,7 @@ namespace HttpRequester
             {
                 consoleHelper.WriteMessageWithTimeStamp($"Посылаем {args[0].ToUpper()} запрос на адрес {url}");
 
-                object responseObject = requestHelper.SendRequest(method, url, null, login, password);
+                object responseObject = requestHelper.SendRequest<object>(method, url, null, login, password).Result;
 
                 consoleHelper.WriteMessageWithTimeStamp($"Сервер вернул ответ:\n{responseObject}", ConsoleColor.DarkGreen);
             }

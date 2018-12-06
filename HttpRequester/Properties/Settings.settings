@@ -3,10 +3,10 @@
   <Profiles />
   <Settings>
     <Setting Name="login" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">TKACHEV_AP</Value>
+      <Value Profile="(Default)">login</Value>
     </Setting>
     <Setting Name="password" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">zXl383</Value>
+      <Value Profile="(Default)">password</Value>
     </Setting>
   </Settings>
 </SettingsFile>

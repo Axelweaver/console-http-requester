@@ -46,12 +46,14 @@ namespace HttpRequester.Helpers
             {
                 var uri = new Uri(url);
 
-                var json = content is null ? string.Empty : _jsonConvertAdapter.Serialize(content);
-
-
                 var requestMessage = new HttpRequestMessage(method, uri);
 
-                requestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                if (content != null)
+                {
+                    var json =  _jsonConvertAdapter.Serialize(content);
+                    requestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
+                }
+                
 
                 using (var response = await httpClient.SendAsync(requestMessage))
                 {

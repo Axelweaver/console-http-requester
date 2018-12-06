@@ -25,7 +25,7 @@ namespace HttpRequester.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("TKACHEV_AP")]
+        [global::System.Configuration.DefaultSettingValueAttribute("login")]
         public string login {
             get {
                 return ((string)(this["login"]));
@@ -34,7 +34,7 @@ namespace HttpRequester.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("zXl383")]
+        [global::System.Configuration.DefaultSettingValueAttribute("password")]
         public string password {
             get {
                 return ((string)(this["password"]));
