@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace HttpRequester.Helpers
+namespace HttpRequester.Adapters
 {
     /// <summary>
     /// Адаптер конвертера json

@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using HttpRequester.Adapters;
 
 namespace HttpRequester.Helpers
 {
@@ -26,6 +27,65 @@ namespace HttpRequester.Helpers
         }
 
         /// <summary>
+        /// Послать http запрос
+        /// </summary>
+        /// <typeparam name="T">Тип возращаемого объекта</typeparam>
+        /// <param name="method">Метод</param>
+        /// <param name="url">URL адрес</param>
+        /// <param name="content">Объек для сериализации (json)</param>
+        /// <param name="username">Логин</param>
+        /// <param name="password">Пароль</param>
+        /// <returns></returns>
+        public async Task<T> SendRequest<T>(HttpMethod method, 
+                                        string url, 
+                                        object content = null, 
+                                        string username = null, 
+                                        string password = null)
+        {
+            using (var httpClient = GetHttpClient(username, password))
+            {
+                var uri = new Uri(url);
+
+                var json = content is null ? string.Empty : _jsonConvertAdapter.Serialize(content);
+
+
+                var requestMessage = new HttpRequestMessage(method, uri);
+
+                requestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                using (var response = await httpClient.SendAsync(requestMessage))
+                {
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        throw new Exception($"{response.StatusCode} {response.ReasonPhrase}\n{response}");
+                    }
+
+                    var result = await GetObjectFromResponse<T>(response);
+
+                    return result;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Послать http запрос
+        /// </summary>
+        /// <typeparam name="T">Тип возращаемого объекта</typeparam>
+        /// <param name="method">Метод</param>
+        /// <param name="url">URL адрес</param>
+        /// <param name="content">Объек для сериализации (json)</param>
+        /// <param name="username">Логин</param>
+        /// <param name="password">Пароль</param>
+        /// <returns></returns>
+        public async Task SendRequest(HttpMethod method,
+                                      string url,
+                                      object content = null,
+                                      string username = null,
+                                      string password = null)
+        {
+            await SendRequest<object>(method, url, content, username, password);
+        }
+        /// <summary>
         /// Отравить запрос методом POST
         /// </summary>
         /// <typeparam name="T">Тип возвращаемого объекта</typeparam>
@@ -36,31 +96,7 @@ namespace HttpRequester.Helpers
         /// <returns></returns>
         public async Task<T> Post<T>(string url, object content, string username = null, string password = null)
         {
-            using (var httpClient = new HttpClient())
-            {
-                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
-                {
-                    SetAuth(httpClient, username, password);
-                }
-
-                var uri = new Uri(url);
-
-                var json = content is null ? string.Empty : _jsonConvertAdapter.Serialize(content);
-
-                var httpContent = new StringContent(json, Encoding.UTF8, "application/json");
-
-                using (var response = await httpClient.PostAsync(uri, httpContent))
-                {
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        throw new Exception($"{response.StatusCode} {response.ReasonPhrase}\n{response}");
-                    }
-
-                    T result = await GetObjectFromResponse<T>(response);
-
-                    return result;
-                }
-            }
+            return await SendRequest<T>(HttpMethod.Post, url, content, username, password);
         }
 
         /// <summary>
@@ -73,29 +109,26 @@ namespace HttpRequester.Helpers
         /// <returns></returns>
         public async Task<T> Get<T>(string url, string username = null, string password = null)
         {
-            using (var httpClient = new HttpClient())
-            {
-                if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
-                {
-                    SetAuth(httpClient, username, password);
-                }
-
-                var uri = new Uri(url);
-
-                using (var response = await httpClient.GetAsync(uri))
-                {
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        throw new Exception($"{response.StatusCode} {response.ReasonPhrase}\n{response}");
-                    }
-
-                    T result = await GetObjectFromResponse<T>(response);
-
-                    return result;
-                }
-            }
+            return await SendRequest<T>(HttpMethod.Get, url, null, username, password);
         }
 
+        /// <summary>
+        /// Получить httpClient с заданием BasicAuth
+        /// </summary>
+        /// <param name="username">Логин</param>
+        /// <param name="password">Пароль</param>
+        /// <returns></returns>
+        public HttpClient GetHttpClient(string username = null, string password = null)
+        {
+            var httpClient = new HttpClient();
+
+            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+            {
+                SetAuth(httpClient, username, password);
+            }
+
+            return httpClient;
+        }
         /// <summary>
         /// Получить объект из ответа http запроса
         /// </summary>
