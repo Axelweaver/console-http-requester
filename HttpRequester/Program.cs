@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using HttpRequester.Adapters;
 using HttpRequester.Converters;
 using HttpRequester.Helpers;
@@ -41,7 +42,13 @@ namespace HttpRequester
             {
                 consoleHelper.WriteMessageWithTimeStamp($"Посылаем {args[0].ToUpper()} запрос на адрес {url}");
 
-                object responseObject = requestHelper.SendRequest<object>(method, url, null, login, password).Result;
+                var content = args.Length > 2 
+                    && args[2] != null
+                    && (method == HttpMethod.Post || method == HttpMethod.Put)
+                    ? args[2]
+                    : null;
+
+                object responseObject = requestHelper.SendRequest<object>(method, url, content, login, password).Result;
 
                 consoleHelper.WriteMessageWithTimeStamp($"Сервер вернул ответ:\n{responseObject}", ConsoleColor.DarkGreen);
             }

@@ -50,8 +50,18 @@ namespace HttpRequester.Helpers
 
                 if (content != null)
                 {
-                    var json =  _jsonConvertAdapter.Serialize(content);
-                    requestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                    if (content is string)
+                    {
+                        requestMessage.Content = new StringContent((string)content, Encoding.UTF8, "application/json");                          
+                    }
+                    else
+                    {
+                        var json =  _jsonConvertAdapter.Serialize(content);
+
+                        requestMessage.Content = new StringContent(json, Encoding.UTF8, "application/json");                        
+                    }
+
                 }
                 
 
