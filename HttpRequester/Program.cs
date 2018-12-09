@@ -43,8 +43,8 @@ namespace HttpRequester
                 consoleHelper.WriteMessageWithTimeStamp($"Посылаем {args[0].ToUpper()} запрос на адрес {url}");
 
                 var content = args.Length > 2 
-                    && args[2] != null
-                    && (method == HttpMethod.Post || method == HttpMethod.Put)
+                                && args[2] != null
+                                && (method == HttpMethod.Post || method == HttpMethod.Put)
                     ? args[2]
                     : null;
 

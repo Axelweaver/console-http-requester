@@ -84,7 +84,6 @@ namespace HttpRequester.Helpers
         /// <summary>
         /// Послать http запрос
         /// </summary>
-        /// <typeparam name="T">Тип возращаемого объекта</typeparam>
         /// <param name="method">Метод</param>
         /// <param name="url">URL адрес</param>
         /// <param name="content">Объек для сериализации (json)</param>
