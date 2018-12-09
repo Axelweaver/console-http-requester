@@ -35,12 +35,14 @@ namespace HttpRequester.Helpers
         /// <param name="content">Объек для сериализации (json)</param>
         /// <param name="username">Логин</param>
         /// <param name="password">Пароль</param>
+        /// <param name="mediaType">Тип тела запроса</param>
         /// <returns></returns>
         public async Task<T> SendRequest<T>(HttpMethod method, 
-                                        string url, 
-                                        object content = null, 
-                                        string username = null, 
-                                        string password = null)
+                                            string url, 
+                                            object content = null, 
+                                            string username = null, 
+                                            string password = null,
+                                            string mediaType = "application/json")
         {
             using (var httpClient = GetHttpClient(username, password))
             {
@@ -53,7 +55,7 @@ namespace HttpRequester.Helpers
 
                     if (content is string)
                     {
-                        requestMessage.Content = new StringContent((string)content, Encoding.UTF8, "application/json");                          
+                        requestMessage.Content = new StringContent((string)content, Encoding.UTF8, mediaType);                          
                     }
                     else
                     {
@@ -88,14 +90,16 @@ namespace HttpRequester.Helpers
         /// <param name="content">Объек для сериализации (json)</param>
         /// <param name="username">Логин</param>
         /// <param name="password">Пароль</param>
+        /// <param name="mediaType">Тип тела запроса</param>
         /// <returns></returns>
         public async Task SendRequest(HttpMethod method,
                                       string url,
                                       object content = null,
                                       string username = null,
-                                      string password = null)
+                                      string password = null,
+                                      string mediaType = null)
         {
-            await SendRequest<object>(method, url, content, username, password);
+            await SendRequest<object>(method, url, content, username, password, mediaType);
         }
         /// <summary>
         /// Отравить запрос методом POST
