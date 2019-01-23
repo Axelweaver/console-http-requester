@@ -55,8 +55,6 @@ namespace HttpRequester
             catch (Exception e)
             {
                 consoleHelper.WriteMessageWithTimeStamp($"{e.Message}\n{e}", ConsoleColor.Red);
-
-                consoleHelper.ReadLine();
             }
         }
     }
